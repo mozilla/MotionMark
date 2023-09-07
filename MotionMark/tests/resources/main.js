@@ -67,6 +67,7 @@ Controller = Utilities.createClass(
         this._startTimestamp = 0;
         this._endTimestamp = options["test-interval"];
         this._targetFrameRate = options["frame-rate"] || 60;
+        this._frameCount = 0;
         // Default data series: timestamp, complexity, estimatedFrameLength
         var sampleSize = options["sample-capacity"] || (this._targetFrameRate * options["test-interval"] / 1000);
         this._sampler = new Sampler(options["series-count"] || 3, sampleSize, this);
@@ -199,7 +200,8 @@ Controller = Utilities.createClass(
 
     shouldStop: function(timestamp)
     {
-        return timestamp > this._endTimestamp;
+        this._frameCount++;
+        return this._frameCount > 1000;
     },
 
     results: function()
