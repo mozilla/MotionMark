@@ -32,10 +32,10 @@ var MultiplyStage = Utilities.createSubclass(Stage,
         this._offsetIndex = 0;
     }, {
 
-    visibleCSS: [
-        ["visibility", "hidden", "visible"],
-        ["opacity", 0, 1],
-        ["display", "none", "block"]
+    hiddenClasses: [
+        "visibility-hidden",
+        "transparent",
+        "display-none"
     ],
     totalRows: 45,
 
@@ -43,8 +43,6 @@ var MultiplyStage = Utilities.createSubclass(Stage,
     {
         Stage.prototype.initialize.call(this, benchmark, options);
         var tileSize = Math.round(this.size.height / this.totalRows);
-        if (options.visibleCSS)
-            this.visibleCSS = options.visibleCSS;
 
         // Fill the scene with elements
         var x = Math.round((this.size.width - tileSize) / 2);
@@ -92,8 +90,8 @@ var MultiplyStage = Utilities.createSubclass(Stage,
         tile.style.top = y + 'px';
         tile.style.width = tileSize + 'px';
         tile.style.height = tileSize + 'px';
-        var visibleCSS = this.visibleCSS[this.tiles.length % this.visibleCSS.length];
-        tile.style[visibleCSS[0]] = visibleCSS[1];
+        var hiddenClass = this.hiddenClasses[this.tiles.length % this.hiddenClasses.length];
+        tile.classList.add(hiddenClass);
 
         var distance = 1 / tileSize * this.size.multiply(0.5).subtract(new Point(x + halfTileSize, y + halfTileSize)).length();
         this.tiles.push({
@@ -102,7 +100,7 @@ var MultiplyStage = Utilities.createSubclass(Stage,
             step: Math.max(3, distance / 1.5),
             distance: distance,
             active: false,
-            visibleCSS: visibleCSS,
+            hiddenClass: hiddenClass,
         });
     },
 
@@ -127,7 +125,7 @@ var MultiplyStage = Utilities.createSubclass(Stage,
         for (var i = 0; i < this._offsetIndex; ++i) {
             var tile = this.tiles[i];
             tile.active = true;
-            tile.element.style[tile.visibleCSS[0]] = tile.visibleCSS[2];
+            tile.element.classList.remove(tile.hiddenClass)
             tile.rotate += tile.step;
             tile.element.style.transform = "rotate(" + tile.rotate + "deg)";
 
@@ -138,7 +136,7 @@ var MultiplyStage = Utilities.createSubclass(Stage,
         for (var i = this._offsetIndex; i < this.tiles.length && this.tiles[i].active; ++i) {
             var tile = this.tiles[i];
             tile.active = false;
-            tile.element.style[tile.visibleCSS[0]] = tile.visibleCSS[1];
+            tile.element.classList.add(tile.hiddenClass);
         }
     }
 });
