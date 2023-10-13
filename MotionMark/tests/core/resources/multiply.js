@@ -92,6 +92,7 @@ var MultiplyStage = Utilities.createSubclass(Stage,
         tile.style.top = y + 'px';
         tile.style.width = tileSize + 'px';
         tile.style.height = tileSize + 'px';
+        tile.style.pointerEvents = "none";
         var visibleCSS = this.visibleCSS[this.tiles.length % this.visibleCSS.length];
         tile.style[visibleCSS[0]] = visibleCSS[1];
 
